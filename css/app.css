@@ -1,147 +1,185 @@
-@import url(progress_activity.css);
-@import url(confirm.css);
-@import url(switches.css);
-
-* { font-family: 'FiraSans'; }
-
-@media screen and (orientation:landscape) {
-	html{
-		font-size: 5vh!important;
-	}
-}
-@media only screen and (min-resolution: 90dpi) and (min-width: 530px){
-	html{
-		font-size: 150%!important;
-	}
-	header .title.centered{position:absolute;left:45px!important;right:32px;text-align:center;display:inline-block}
-	li, small {
-		font-size: 100%!important;
-	}
-	button{
-		height: 3rem;
-		line-height: 1.5rem;
-	}
-}
-@media only screen and (min-resolution: 90dpi) and (max-width: 530px){
-	li, small{
-		font-size: 90%!important;
-	}
-	header .title.centered{position:absolute;left:32px!important;right:32px;text-align:center;display:inline-block}
-	button{
-		height: 2.4rem;
-		line-height: 1rem;
-	}
-}
-body *{
-	font-weight: normal;
-	letter-spacing: 0.01em;
-}
-a{
-	color: inherit;
+/* fira-sans-300 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-button{
-	background-color: #D45500!important;
-}
-button::-moz-focus-inner{
-	border: 0;
-}
-body > section > header{
-	height: 3rem;
-	box-shadow: none;
-	background: #242D33;
-	box-shadow: 0 0 0rem #333;
-}
-body > section > header > span.title{
-	text-align: center!important;
-     font-weight: lighter;
-     font-style: oblique;
-	line-height: 1.3rem;
-	top: .8rem;
-}
-body > section > header > nav a{
-     text-align: center!important;
-     font-size: 1rem;
-	height: 3rem!important;
-	width: 3rem;
-	color: #FFF!important;
-	text-shadow: none!important;
-	line-height: 2.9rem!important;
-}
-body > section > header > nav a img{
-	width: 1.4rem;
-}
-body > section > header > nav a.left{
-	width: 1.8rem!important;
-	padding: 0 0.8rem!important;
-	background-color: rgba(0, 0, 0, 0);
-}
-body > section > header > nav a.left span{
-	font-size: 1rem!important;
-}
-#main-article{
-	top: 3rem!important;
+/* fira-sans-regular - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-span.icon.brand.twitter, span.icon.refresh {
-	font-size: 100%!important;
+/* fira-sans-500 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-li, small {
-	line-height: 1em!important;
+/* fira-sans-600 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-.button.anchor {
-	width: 70%!important;
+/* fira-sans-700 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-h1 {
-	font-size: 50%!important;
+/* fira-sans-900 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 900;
+  src: local(''),
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-900.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-#progress {
-	top: 0!important;
+* { font-family: 'Fira Sans',sans-serif; 
+  font-weight: 500;
 }
 
-#item-delete-dialog {
-  display:none;
+
+
+body,
+html {
+	background: white;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	position: relative;
+	top: 0;
+	left: 0
 }
 
-.item-list-scrollouter {
-  height: calc(100% - 5rem);
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
- 
-.item-list-scrollouter label {
-  display: none;
-}
- 
-.item-list-scrollouter-edit {
-  height: calc(100% - 11.5rem);
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
- 
-.item-list-scrollouter-edit label {
-  display: inline-block;
+:focus {
+	outline: none;
 }
 
-#main-wrapper, #item-list-panel {
-  height: 100%;
+.lista li:focus{
+	background-color: mediumaquamarine;
+	color: white;
 }
 
-#li label {
-	font-size: 10px!important;
+
+ul.lista{
+
+height: calc(100% - 60px);
+overflow: auto;
 }
+
+
 
 #path_root {
-	background: none!important;
-	border-bottom: 0px!important;
+	overflow: hidden;
+	box-sizing: border-box;
+	transform: translateY(6px);
+	white-space: nowrap;
 }
 
+#path_root label {
+  transform: translateY(-3px);
+  padding-left: 5px;
+  padding-right: 24px;
+}
+
+ul {
+	list-style: none;
+	padding: 0px;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+#deviceStoragesList{
+	position: fixed;
+	opacity: 0;
+}
+
+.lista li {
+	padding: 5px;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-left: 10px;
+	height: 42px;
+font-size: 16px;
+padding-top: 10px;
+box-sizing: border-box;
+}
+
+/* ----------------------------------
+ * CHECKBOXES / RADIOS
+ * ---------------------------------- */
+
+ label:not([for])  {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 1px;
+  width: 2rem;
+  position: relative;
+  background: none;
+  box-sizing: border-box;
+  transform: translateY(2px);
+}
+
+label:not([for]) input[type="checkbox"],
+label:not([for]) input[type="radio"] {
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+label:not([for]) input + span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -1.0rem 0 0 -1.0rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  pointer-events: none;
+}
+
+
+label:not([for]) input:checked + span {
+  background-position: center bottom;
+}
+
+
+
+
+
 label:not([for]) input[type="checkbox"] + span.folder {
-	background: url(images/folder.png) no-repeat center;
+	background: url(images/folder.svg) no-repeat center;
+}
+
+.lista li:focus label:not([for]) input[type="checkbox"] + span.folder {
+	filter: invert(100%);
 }
 
 label:not([for]) input[type="checkbox"] + span.doc {

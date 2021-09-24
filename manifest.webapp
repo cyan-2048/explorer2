@@ -12,12 +12,13 @@
 	},
 	"default_locale": "en",
 	"permissions": {
+		"spatialnavigation-app-manage":{},
 		"desktop-notification": {
 		"description": "To show notifications to the user"
 		},
 		"device-storage:sdcard": {
 		"description": "To pick a file from the SDCARD",
-		"access": "readonly"
+		"access": "readwrite"
 		}
 	},
 		"activities": {
@@ -33,6 +34,5 @@
 			"description": "Permite seleccionar un archivo y compartirlo con una aplicación, bluetooth o email."
 		}
 	},
-	"type": "privileged",
-	"role": "system"
+	"type": "privileged"
 }

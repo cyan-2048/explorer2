@@ -22,12 +22,10 @@
 */
 
 
-(function () {
 
   isPicking = false;
   activityRequest = "";
 
-  function runApp() {
 
     SDCARD = "sdcard";
     filesToImport = [];
@@ -35,16 +33,28 @@
     root = "";
     isBacking = false;
     foldersAdded = [];
+    lastIndex = new Object;
 
-    refreshBtn = document.querySelector("#refreshBtn");
-    refreshBtn.addEventListener ('click', function () {
-      load();
-    });
+    window.addEventListener("keydown",(e)=>{
+      switch (e.key) {
+        case "Backspace":
+          lastIndex["/"+root] = document.activeElement.tabIndex
+          if (root !== ""){
+            e.preventDefault();
+            back();
+          }
+          break;
+        case "Enter":
+          lastIndex["/"+root] = document.activeElement.tabIndex
+          document.activeElement.click()
+          break;
+        case "ArrowLeft":
+          load()
+          break;
+      }
+    })
 
-    backhBtn = document.querySelector("#backBtn");
-    backhBtn.addEventListener ('click', function () {
-      back();
-    });
+
 
     // Open the default device storage
     storage = navigator.getDeviceStorage(SDCARD);
@@ -71,7 +81,7 @@
     }
    
 
-    function back(){
+    const back = ()=>{
       isBacking = true;
       folders = root.split("/");
       folders.splice(folders.length - 1, 1)
@@ -83,7 +93,7 @@
      * Switches to another device storage, based on the given name
      * @param {String} deviceStorageName Name of the device storage to switch to
      */
-    function changeDeviceStorage(deviceStorageName) {
+    const changeDeviceStorage=(deviceStorageName)=> {
         for (var i=0; i< storages.length; i++) {
             if (deviceStorageName === storages[i].storageName) {
                 storage = storages[i];
@@ -95,7 +105,7 @@
         }
     }
 
-    function load(){
+    const load = ()=>{
 
       foldersToSort = [];
       filesToSort = [];
@@ -103,25 +113,36 @@
       sizes = [];
 
       alreadyAdded = [];
-      if(root == ""){
-        backhBtn.style.display = 'none';
-      } else {
-        backhBtn.style.display = 'block';
-      }
 
       root_ = document.querySelector("#path_root");
       root_.innerHTML = '<label><span class="home"></span></label>' + root;
 
-      $('#item-list li').remove();
-      var cursor = storage.enumerate(root); 
+      document.getElementById("item-list").innerHTML = ""
+      var cursor = storage.enumerate(root);
 
       cursor.onsuccess = function() {
-        if (!cursor.result)  {
+        if (!cursor.result) {
           execute();
-          return; 
+          lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
+          if (!lastIndex["/"+root]){
+            lastIndex["/"+root] = 0
+          }
+          document.querySelectorAll(".lista li")[lastIndex["/"+root]].focus()
+          setTimeout(()=>{
+            const rect = document.activeElement.getBoundingClientRect();
+            const elY =
+              rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+            
+            document.activeElement.parentNode.scrollBy({
+              left: 0,
+              top: elY - window.innerHeight / 2,
+              behavior: navlzy.scrl,
+            });
+          }, 10)
+          return;
         }
 
-         var file = cursor.result;
+        var file = cursor.result;
         var prefix = "/" + storage.storageName + "/";
         if (root != "") {
            prefix += root + "/";
@@ -132,11 +153,11 @@
         } else {
           filesToSort.push(fname + " - " + (file.size / 1000000).toFixed(2) + "Mb");
         }
-        cursor.continue(); 
+        cursor.continue();
       }
 
       function execute() {
-
+        var input = []
         filesWithImage = ['doc', 'xls', 'ppt', 'psd', 'ai', 'pdf', 'html', 'xml', 'txt', 'mp3', 'jpg', 'png', 'zip', 'ogg'];
 
         pathsToSort.sort(
@@ -154,7 +175,7 @@
           }
           );
 
-        for (var s = 0; s < pathsToSort.length; s++)  {
+        for (var s = 0; s < pathsToSort.length; s++) {
           n = pathsToSort[s].split("/");
           if(n.length == 1) {
             filesToSort.push(n[0]);
@@ -163,58 +184,89 @@
           }
         }
 
-        for (var g = 0; g < foldersToSort.length; g++)  {
+        for (var g = 0; g < foldersToSort.length; g++) {
           path = foldersToSort[g].split("/");
           if(alreadyAdded.lastIndexOf(path[0] + "/") == -1) {
             alreadyAdded.push(path[0] + "/");
-            $("#item-list").append('<li><label><input type="checkbox"><span class="folder"></span>'
-              + '</label>' + path[0] + "/" + '</li>');
+            input.push('<li><label><input type="checkbox"><span class="folder"></span>'
+            + '</label>' + path[0] + "/" + '</li>')
           }
         }
-        for (var f = 0; f < filesToSort.length; f++)  {
+        for (var f = 0; f < filesToSort.length; f++) {
           path = filesToSort[f].split("/");
           fileType = path.toString().substring(0, path.toString().lastIndexOf(' -')).split(".")[1];
           if(filesWithImage.indexOf(fileType) == -1){
             fileType = 'unk';
           }
-          $("#item-list").append('<li><label><input type="checkbox"><span class="' + fileType + '"></span>'
-            + '</label>' + path + '</li>');
+          
+          input.push('<li><label><input type="checkbox"><span class="' + fileType + '"></span>'
+          + '</label>' + path + '</li>')
         }
-
+        
+        document.querySelector("#item-list").insertAdjacentHTML("afterbegin",input.join(""))
+        
         flagOk = true;
 
-        $('#item-list li').click(function(event) {
-          var target = $(event.target);
-          if(flagOk && target.text() != ""){
-            if(target.text().split("/").length > 1){
-              if(!isBacking){
-                if(root == ""){
-                  root = target.text().substring(0, target.text().lastIndexOf('/'));
-                } else {
-                  root = root + "/" + target.text().substring(0, target.text().lastIndexOf('/'));
+      //  $('#item-list li').click(function(event) {
+      //    var target = $(event.target);
+      //    if(flagOk && target.text() != ""){
+      //      if(target.text().split("/").length > 1){
+      //        if(!isBacking){
+      //          if(root == ""){
+      //            root = target.text().substring(0, target.text().lastIndexOf('/'));
+      //          } else {
+      //            root = root + "/" + target.text().substring(0, target.text().lastIndexOf('/'));
+      //          }
+      //        }
+      //        load();
+      //      } else {
+      //        var fname = target.text();
+      //        if (fname.lastIndexOf(' -') >= 0) {
+      //          fname = fname.substring(0, fname.lastIndexOf(' -'))
+      //        }
+      //        console.log("File to share: " + fname);
+      //        importFiles(fname);
+      //      }
+      //      flagOk = false;
+      //    }
+      //  });
+
+        for (let l = 0; l < document.querySelectorAll('#item-list li').length; l++) {
+          document.querySelectorAll('#item-list li')[l].addEventListener("click",function(e) {
+            var target = this.innerText;
+            if(flagOk && target !== ""){
+              if(target.split("/").length > 1){
+                if(!isBacking){
+                  if(root == ""){
+                    root = target.substring(0, target.lastIndexOf('/'));
+                  } else {
+                    root = root + "/" + target.substring(0, target.lastIndexOf('/'));
+                  }
                 }
+                load();
+              } else {
+                var fname = target;
+                if (fname.lastIndexOf(' -') >= 0) {
+                  fname = fname.substring(0, fname.lastIndexOf(' -'))
+                }
+                console.log("File to share: " + fname);
+                importFiles(fname);
               }
-              load();
-            } else {
-              var fname = target.text();
-              if (fname.lastIndexOf(' -') >= 0) {
-                fname = fname.substring(0, fname.lastIndexOf(' -'))
-              }
-              console.log("File to share: " + fname);
-              importFiles(fname);
+              flagOk = false;
             }
-            flagOk = false;
-          }
-        });
+          })
+        }
+
+        
       };
       isBacking = false;
     }
 
     load();
 
-    function importFiles(filesToImport) {
+    const importFiles = (filesToImport)=> {
 
-      a_file = (root == "") ? storage.get(filesToImport) : a_file = storage.get(root + "/" + filesToImport); 
+      a_file = (root == "") ? storage.get(filesToImport) : a_file = storage.get(root + "/" + filesToImport);
 
       a_file.onerror = function() {
         var afterNotification = function(){
@@ -231,7 +283,7 @@
         console.error("Error in: ", a_file.error.name);
       };
 
-      a_file.onsuccess = function() { 
+      a_file.onsuccess = function() {
 
         if(isPicking){
           isPicking = false;
@@ -272,9 +324,8 @@
         }
       };
     }
-  }
+  
 
-  runApp();
 
   navigator.mozSetMessageHandler('activity', function(activityReq) {
     activityRequest = activityReq;
@@ -285,5 +336,5 @@
     }
   });
 
-})();
+
 

@@ -1,4 +1,16 @@
-Explorer 2
+Explorer knockoff
 ========
 
-A file explorer to see all your files on the SDCARD and to share them. Fork of Sebastian Rajo's Explorer app, now it hides itself from the homescreen and acts like a system app for sharing files trough it.
+issue: got rid of most of the design coz library cleaning... so yeah i need to polish the design i just kinda have no time for that yet....
+
+added features: 
+ - I tested my implementation of navigation i guess....
+ - now the app remembers which folder/file was last focused in the current session.
+
+todo:
+ - add better icons
+ - add softkeys
+
+~~I'll get rid of those jquery stuff next... (don't think it's necessary with such simple stuff that vanilla js can do...)~~
+
+lmao that was so easy i didn't even need to commit yet... like bruh wtf why would you need all of these libraries makes absolutely no sense to use stuff that you can simply do with vanilla js....
