@@ -48,7 +48,7 @@
           lastIndex["/"+root] = document.activeElement.tabIndex
           document.activeElement.click()
           break;
-        case "ArrowLeft":
+        case "SoftLeft":
           load()
           break;
       }
@@ -114,8 +114,7 @@
 
       alreadyAdded = [];
 
-      root_ = document.querySelector("#path_root");
-      root_.innerHTML = '<label><span class="home"></span></label>' + root;
+      document.querySelector("#path_root").innerHTML = '<label><span class="home"></span></label>' + root;
 
       document.getElementById("item-list").innerHTML = ""
       var cursor = storage.enumerate(root);
