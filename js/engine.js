@@ -204,6 +204,27 @@
         
         document.querySelector("#item-list").insertAdjacentHTML("afterbegin",input.join(""))
         
+        /*
+        document.activeElement.insertAdjacentHTML("afterend",'<div id="opsyons" style = "height:192px"><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div>')
+document.activeElement.scrollIntoView({block:"start",behavior:"smooth"})
+
+document.getElementById("opsyons").remove()
+setTimeout(()=>{
+            const rect = document.activeElement.getBoundingClientRect();
+            const elY =
+              rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+            
+            document.activeElement.parentNode.scrollBy({
+              left: 0,
+              top: elY - window.innerHeight / 2,
+              behavior: navlzy.scrl,
+            });
+          }, 50);
+
+
+          I'm starting to give up on animations at this point
+*/
+        
         flagOk = true;
 
       //  $('#item-list li').click(function(event) {

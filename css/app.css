@@ -62,7 +62,12 @@
   font-weight: 500;
 }
 
+@keyframes peekaboo {
+	from {transform: rotateX(90deg)}
+	to {transform: none}
+}
 
+/* animations is harder than i remember*/
 
 body,
 html {
