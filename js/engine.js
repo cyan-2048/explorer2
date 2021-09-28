@@ -22,10 +22,11 @@
 */
 
 
-
+  opsyon = false;
   isPicking = false;
+  isSharing = false;
   activityRequest = "";
-
+  anim = 2;
 
     SDCARD = "sdcard";
     filesToImport = [];
@@ -38,18 +39,101 @@
     window.addEventListener("keydown",(e)=>{
       switch (e.key) {
         case "Backspace":
+          anim = 0
           lastIndex["/"+root] = document.activeElement.tabIndex
           if (root !== ""){
             e.preventDefault();
-            back();
+            for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
+              document.querySelectorAll(".lista li")[p].classList = "anim4";
+            }
+            setTimeout(()=>{
+              back();
+            },300)
+            
+          }
+          if (document.activeElement.className == "oops"){
+            e.preventDefault();
+            goAwayPls()
           }
           break;
         case "Enter":
+          anim = 1;
+          if (document.activeElement.parentElement.id == "item-list"){
+            
+            if (JSON.parse(document.activeElement.getAttribute("meth")).folder == true){
+              for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
+                document.querySelectorAll(".lista li")[p].classList = "anim3";
+              }
+              setTimeout(()=>{
+                selecta()
+              },300)
+            } else {
+              selecta()
+            }
+
+          }
+
+           if (document.activeElement.className == "oops"){
+            console.log("clicked")
+            var b = Number(document.activeElement.getAttribute("num"))
+            
+            switch (b) {
+              case 1:
+                document.getElementById("deviceStoragesList").focus()
+                break;
+              case 2:
+                isSharing = true
+                importFiles(selsected["fname"])
+                break;
+              case 3:
+                
+                break;
+              case 4:
+                
+                break;
+              case 5:
+                
+                break;
+              case 6:
+                
+                break;
+              case 7:
+                
+                break;
+              case 8:
+                
+                break;
+            }
+          }
           lastIndex["/"+root] = document.activeElement.tabIndex
-          document.activeElement.click()
+
+
           break;
         case "SoftLeft":
-          load()
+          anim = 2
+          for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
+            document.querySelectorAll(".lista li")[p].classList = "anim5";
+          }
+          setTimeout(()=>{
+            load()
+          },300)
+          lastIndex["/"+root] = document.activeElement.tabIndex
+          break;
+        case "SoftRight":
+          if (document.activeElement.parentElement.id == "item-list"){
+          opsyon = true
+          lastIndexu = document.activeElement;
+          document.querySelector("footer").classList.add("negro");
+          selsected = JSON.parse(document.activeElement.getAttribute("meth"))
+          if (selsected.folder == true){
+            document.getElementById("shr").className = ""
+          } else {
+            document.getElementById("shr").className = "oops"
+          }
+          document.getElementById("upsyun").style.display = "block";
+          lazyNAV({fcsbl:'.oops',bv:"nearest",scrl:"auto"});
+          document.querySelector(".oops").focus()
+        }
           break;
       }
     })
@@ -66,7 +150,7 @@
         storages = navigator.getDeviceStorages(SDCARD);
         if (storages.length > 1) {
             // Display the dropdown list only if there are more than one device storage available
-            deviceStoragesList.style.display = "block";
+            deviceStoragesList.style.display = "inline-block";
             for (var i = 0; i < storages.length; i++) {
                 var storageName = storages[i].storageName;
                 deviceStoragesList.options[i] = new Option(storageName, storageName);
@@ -76,10 +160,28 @@
             }
         }
         deviceStoragesList.addEventListener("change", function() {
+          anim = 2
+          setTimeout(() => {
             changeDeviceStorage(this.options[this.selectedIndex].value);
+          }, 50); 
         });
     }
    
+
+    function goAwayPls(){
+      if (opsyon == true){
+        opsyon = false;
+        document.getElementById("upsyun").className = "anim6"
+        lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
+        setTimeout(() => {
+          document.querySelector("footer").classList.remove("negro")
+          document.getElementById("upsyun").style.display = "none"
+          document.getElementById("upsyun").className = ""
+          lastIndexu.focus()
+        }, 300);
+      }
+      
+    }
 
     const back = ()=>{
       isBacking = true;
@@ -106,21 +208,32 @@
     }
 
     const load = ()=>{
-
+      goAwayPls();
       foldersToSort = [];
       filesToSort = [];
       pathsToSort = [];
       sizes = [];
 
       alreadyAdded = [];
+      
+      if (root.replace(/\//g, ' > ').length > 25){
+        document.querySelector("#path_root").innerHTML = '<label><span class="home"></span></label>' +"<div>"+ "..." + root.replace(/\//g, ' > ').substr(root.replace(/\//g, ' > ').length - 25) +"</div>";
+      } else {
+        document.querySelector("#path_root").innerHTML = '<label><span class="home"></span></label>' +"<div>"+ root.replace(/\//g, ' > ') +"</div>";
+      }
 
-      document.querySelector("#path_root").innerHTML = '<label><span class="home"></span></label>' + root;
+      
 
       document.getElementById("item-list").innerHTML = ""
+      loadinganim = setTimeout(()=>{
+        document.getElementById("item-list").innerHTML = '<div style="position: relative; top: calc(50vh / 2);" class="windows8"><div class="wBall" id="wBall_1"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_2"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_3"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_4"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_5"><div class="wInnerBall"></div></div></div><div style="width: 100%; text-align: center; position: relative; top: 90px;">Just a moment...</div>'
+      },1000)
       var cursor = storage.enumerate(root);
 
       cursor.onsuccess = function() {
         if (!cursor.result) {
+          clearTimeout(loadinganim);
+          document.getElementById("item-list").innerHTML = "";
           execute();
           lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
           if (!lastIndex["/"+root]){
@@ -135,9 +248,17 @@
             document.activeElement.parentNode.scrollBy({
               left: 0,
               top: elY - window.innerHeight / 2,
-              behavior: navlzy.scrl,
+              behavior: "auto",
             });
-          }, 10)
+          }, 5)
+
+          setTimeout(() => {
+            for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
+              document.querySelectorAll(".lista li")[p].classList = "anim"+anim;
+            }
+          }, 50);
+          
+          
           return;
         }
 
@@ -148,9 +269,9 @@
         }
         var fname = file.name.replace(prefix, "");
         if(fname.split("/").length > 1) {
-          pathsToSort.push(fname);
+          pathsToSort.push({"fname":fname , "lastModified": file.lastModifiedDate.toLocaleString()});
         } else {
-          filesToSort.push(fname + " - " + (file.size / 1000000).toFixed(2) + "Mb");
+          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "lastModified": file.lastModifiedDate.toLocaleString() });
         }
         cursor.continue();
       }
@@ -161,48 +282,51 @@
 
         pathsToSort.sort(
           function(a, b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
+            if (a["fname"].toLowerCase() < b["fname"].toLowerCase()) return -1;
+            if (a["fname"].toLowerCase() > b["fname"].toLowerCase()) return 1;
             return 0;
           }
           );
         filesToSort.sort(
           function(a, b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
+            if (a["fname"].toLowerCase() < b["fname"].toLowerCase()) return -1;
+            if (a["fname"].toLowerCase() > b["fname"].toLowerCase()) return 1;
             return 0;
           }
           );
 
         for (var s = 0; s < pathsToSort.length; s++) {
-          n = pathsToSort[s].split("/");
+          var n = pathsToSort[s].fname.split("/");
           if(n.length == 1) {
             filesToSort.push(n[0]);
           } else {
-            foldersToSort.push(n[0]);
+            var a = [...pathsToSort]
+            a.fname = n[0];
+            foldersToSort.push(a);
           }
         }
 
         for (var g = 0; g < foldersToSort.length; g++) {
-          path = foldersToSort[g].split("/");
+          path = foldersToSort[0][g].fname.split("/");
+
           if(alreadyAdded.lastIndexOf(path[0] + "/") == -1) {
             alreadyAdded.push(path[0] + "/");
-            input.push('<li><label><input type="checkbox"><span class="folder"></span>'
-            + '</label>' + path[0] + "/" + '</li>')
+            input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
+            + '</label>' + path[0] + '</li>')
           }
         }
         for (var f = 0; f < filesToSort.length; f++) {
-          path = filesToSort[f].split("/");
-          fileType = path.toString().substring(0, path.toString().lastIndexOf(' -')).split(".")[1];
+          path = filesToSort[f];
+          fileType = path["fname"].split(".")[1];
           if(filesWithImage.indexOf(fileType) == -1){
             fileType = 'unk';
           }
           
-          input.push('<li><label><input type="checkbox"><span class="' + fileType + '"></span>'
-          + '</label>' + path + '</li>')
+          input.push('<li meth=\''+JSON.stringify(path)+'\'><label><input type="checkbox"><span class="' + fileType + '"></span>'
+          + '</label>' + path["fname"] + '</li>')
         }
         
-        document.querySelector("#item-list").insertAdjacentHTML("afterbegin",input.join(""))
+        document.querySelector("#item-list").innerHTML = input.join("")
         
         /*
         document.activeElement.insertAdjacentHTML("afterend",'<div id="opsyons" style = "height:192px"><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div class="poppies">CONCEPT</div><div>')
@@ -227,55 +351,7 @@ setTimeout(()=>{
         
         flagOk = true;
 
-      //  $('#item-list li').click(function(event) {
-      //    var target = $(event.target);
-      //    if(flagOk && target.text() != ""){
-      //      if(target.text().split("/").length > 1){
-      //        if(!isBacking){
-      //          if(root == ""){
-      //            root = target.text().substring(0, target.text().lastIndexOf('/'));
-      //          } else {
-      //            root = root + "/" + target.text().substring(0, target.text().lastIndexOf('/'));
-      //          }
-      //        }
-      //        load();
-      //      } else {
-      //        var fname = target.text();
-      //        if (fname.lastIndexOf(' -') >= 0) {
-      //          fname = fname.substring(0, fname.lastIndexOf(' -'))
-      //        }
-      //        console.log("File to share: " + fname);
-      //        importFiles(fname);
-      //      }
-      //      flagOk = false;
-      //    }
-      //  });
-
-        for (let l = 0; l < document.querySelectorAll('#item-list li').length; l++) {
-          document.querySelectorAll('#item-list li')[l].addEventListener("click",function(e) {
-            var target = this.innerText;
-            if(flagOk && target !== ""){
-              if(target.split("/").length > 1){
-                if(!isBacking){
-                  if(root == ""){
-                    root = target.substring(0, target.lastIndexOf('/'));
-                  } else {
-                    root = root + "/" + target.substring(0, target.lastIndexOf('/'));
-                  }
-                }
-                load();
-              } else {
-                var fname = target;
-                if (fname.lastIndexOf(' -') >= 0) {
-                  fname = fname.substring(0, fname.lastIndexOf(' -'))
-                }
-                console.log("File to share: " + fname);
-                importFiles(fname);
-              }
-              flagOk = false;
-            }
-          })
-        }
+        
 
         
       };
@@ -283,6 +359,26 @@ setTimeout(()=>{
     }
 
     load();
+
+    function selecta() {
+      var target = JSON.parse(document.activeElement.getAttribute("meth"));
+      if(flagOk && target.fname != ""){
+        if(target.folder == true){
+          if(!isBacking){
+            if(root == ""){
+              root = target["fname"];
+            } else {
+              root = root + "/" + target["fname"];
+            }
+          }
+          load();
+        } else {
+          console.log("File to share: " + target["fname"]);
+          importFiles(target["fname"]);
+        }
+        flagOk = false;
+      }
+    }
 
     const importFiles = (filesToImport)=> {
 
@@ -304,7 +400,7 @@ setTimeout(()=>{
       };
 
       a_file.onsuccess = function() {
-
+        flagOk = true
         if(isPicking){
           isPicking = false;
           activityRequest.postResult.type = a_file.result.type;
@@ -312,7 +408,8 @@ setTimeout(()=>{
             type: a_file.result.type,
             blob: a_file.result
           });
-        } else {
+        } else if (isSharing) {
+          isSharing = false;
           blob = a_file.result;
           item = new Object();
           item.isVideo = true;
@@ -344,8 +441,10 @@ setTimeout(()=>{
         }
       };
     }
-  
 
+    document.getElementById("deviceStoragesList").addEventListener("blur",()=>{
+      document.querySelector(".oops").focus()
+    })
 
   navigator.mozSetMessageHandler('activity', function(activityReq) {
     activityRequest = activityReq;

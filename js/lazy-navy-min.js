@@ -243,7 +243,7 @@ if (document.querySelectorAll(navlzy.fcsbl).length !== 0 ){
 
 const isInViewport = (element)=>{
   const bounding = element.getBoundingClientRect();
-  return (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= window.innerWidth && bounding.bottom <= window.innerHeight - 0);
+  return (bounding.top >= 0 + 20 && bounding.left >= 0 && bounding.right <= window.innerWidth && bounding.bottom <= window.innerHeight - 0 - 30);
 }
 
 

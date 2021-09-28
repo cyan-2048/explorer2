@@ -12,8 +12,11 @@
   </head>
 
   <body class="app">
-    <ul style="height: 30px;"><li id="path_root"></li></ul>
-    <select id="deviceStoragesList" class="select" style="display: none;"></select>
+    
+    <div id="heaten">
+      <ul style="height: 30px;"><li id="path_root"></li></ul>
+    </div>
+    
     
     <ul class="lista" id="item-list"></ul>
     <footer class="softkeys">
@@ -21,6 +24,27 @@
       <div class="softkey softkey-center">SELECT</div>
       <div class="softkey softkey-right">Options</div>
     </footer>
+
+    <div id="upsyun" style="display: none;">
+      <div upsyun="header">Options</div>
+      <div upsyun="content">
+        <div class="oops" num="1">Change Storage
+          <select id="deviceStoragesList">
+            <option value="sdcard">sdcard</option>
+            <option value="sdcard1">sdcard1</option>
+          </select></div>
+        <div class="oops" id="shr" num="2">Share</div>
+        <div class="oops" num="3">Properties</div>
+        <div class="oops" num="4">Exit</div>
+        <div class="oops" num="5">Refresh</div>
+        <div class="oops" id="bk" num="6">Back</div>
+        <div class="oops" id="fwd" num="7">Forward</div>
+        <div class="oops" num="8">Settings</div>
+        <div class="oops" num="9">About</div>
+        
+      </div>
+    </div>
+
     <script type="text/javascript" src="js/engine.js"></script>
   </body>
 </html>
