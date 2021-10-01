@@ -85,24 +85,40 @@ html {
 	outline: none;
 }
 
+/*
+
 .lista li:focus{
 	background-color: #117777;
 	color: white;
 }
 
 
-ul.lista{
 
-height: calc(100% - 60px);
-overflow: auto;
-overflow-x: hidden;
-/*! transform: translateY(calc(-100% - -41px)); */
-position: fixed;
-width: 100%;
-/*! transition: all ease 0.3s; */
+
+.lista li {
+	padding: 5px;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-left: 10px;
+	height: 48px;
+font-size: 16px;
+padding-top: 14px;
+box-sizing: border-box;
+text-overflow: ellipsis;
+opacity: 0;
 }
 
+*/
 
+ul.lista{
+
+	height: calc(100% - 60px);
+	overflow: auto;
+	overflow-x: hidden;
+	position: fixed;
+	width: 100%;
+	
+	}
 
 #path_root {
 	overflow-x: hidden;
@@ -151,18 +167,7 @@ ul {
 	display: inline-block;
 }
 
-.lista li {
-	padding: 5px;
-	overflow: hidden;
-	white-space: nowrap;
-	padding-left: 10px;
-	height: 48px;
-font-size: 16px;
-padding-top: 14px;
-box-sizing: border-box;
-text-overflow: ellipsis;
-opacity: 0;
-}
+
 
 /* cringe animations */
 
@@ -624,4 +629,81 @@ footer.negro {
 	color: white !important;
 	background: black !important;
 	border-color: black !important;
+}
+
+/* stolen from https://github.com/canicjusz/KaiOS-native-UI/blob/main/kaios-native-ui.css */
+:root {
+	--item-background: transparent;
+	--item-text-color: black;
+	--item-subtext-color: black;
+	--item-focused-background: #117777;
+	--item-focused-text-color: white;
+	--item-focused-subtext-color: white;
+}
+
+.list-item-icon {
+	background: var(--item-background);
+}
+
+.list-item-icon__text {
+	color: var(--item-text-color)
+}
+
+.list-item-icon__subtext {
+  color: var(--item-subtext-color);
+}
+
+.list-item-icon:focus {
+	background: var(--item-focused-background);
+}
+
+.list-item-icon:focus .list-item-icon__text {
+  color: var(--item-focused-text-color);
+}
+
+.list-item-icon:focus .list-item-icon__subtext {
+  color: var(--item-focused-subtext-color);
+}
+
+.list-item-icon {
+  position: relative;
+  box-sizing: border-box;
+  padding: 10px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+	opacity: 0;
+}
+
+.list-item-icon__text-container {
+  margin-left: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.list-item-icon__text {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 400;
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 180px;
+}
+
+
+.list-item-icon__subtext {
+  word-wrap: break-word;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+
+
+.list-item-icon__icon {
+  height: 32px;
+  width: 32px;
 }

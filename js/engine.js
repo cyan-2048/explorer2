@@ -47,8 +47,8 @@
           }
           if (root !== ""){
             e.preventDefault();
-            for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-              document.querySelectorAll(".lista li")[p].classList = "anim4";
+            for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+              document.querySelectorAll(".lista div[meth]")[p].classList.add("anim4");
             }
             setTimeout(()=>{
               back();
@@ -65,8 +65,8 @@
           if (document.activeElement.parentElement.id == "item-list"){
             
             if (JSON.parse(document.activeElement.getAttribute("meth")).folder == true){
-              for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-                document.querySelectorAll(".lista li")[p].classList = "anim3";
+              for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+                document.querySelectorAll(".lista div[meth]")[p].classList.add("anim3");
               }
               setTimeout(()=>{
                 selecta()
@@ -99,8 +99,8 @@
                 goAwayPls()
                 setTimeout(() => {
                   anim = 2
-                  for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-                    document.querySelectorAll(".lista li")[p].classList = "anim5";
+                  for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+                    document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
                   }
                   setTimeout(()=>{
                     load()
@@ -131,8 +131,8 @@
           break;
         case "SoftLeft":
           anim = 2
-          for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-            document.querySelectorAll(".lista li")[p].classList = "anim5";
+          for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+            document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
           }
           setTimeout(()=>{
             load()
@@ -199,7 +199,7 @@
       if (opsyon == true){
         opsyon = false;
         document.getElementById("upsyun").className = "anim6"
-        lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
+        lazyNAV({fcsbl:".lista div[meth]",bv:"center",scrl:"smooth"})
         setTimeout(() => {
           document.querySelector("footer").classList.remove("negro")
           document.getElementById("upsyun").style.display = "none"
@@ -262,11 +262,11 @@
           clearTimeout(loadinganim);
           document.getElementById("item-list").innerHTML = "";
           execute();
-          lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
+          lazyNAV({fcsbl:".lista div[meth]",bv:"center",scrl:"smooth"})
           if (!lastIndex["/"+root] || lastIndex["/"+root] < 0){
             lastIndex["/"+root] = 0
           }
-          document.querySelectorAll(".lista li")[lastIndex["/"+root]].focus()
+          document.querySelectorAll(".lista div[meth]")[lastIndex["/"+root]].focus()
           setTimeout(()=>{
             const rect = document.activeElement.getBoundingClientRect();
             const elY =
@@ -280,8 +280,8 @@
           }, 5)
 
           setTimeout(() => {
-            for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-              document.querySelectorAll(".lista li")[p].className = "anim"+anim;
+            for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+              document.querySelectorAll(".lista div[meth]")[p].classList.add("anim"+anim);
             }
           }, 50);
           
@@ -338,19 +338,25 @@
 
           if(alreadyAdded.lastIndexOf(path[0] + "/") == -1) {
             alreadyAdded.push(path[0] + "/");
-            input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
-            + '</label>' + path[0] + '</li>')
+          //  input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
+          //  + '</label>' + path[0] + '</li>')
+
+            input.push('<div class="list-item-icon" meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified+'</p></div></div>')
+
           }
         }
         for (var f = 0; f < filesToSort.length; f++) {
           path = filesToSort[f];
-          fileType = path["fname"].split(".")[1];
+          fileType = path["ext"];
           if(filesWithImage.indexOf(fileType) == -1){
             fileType = 'unk';
           }
           
-          input.push('<li meth=\''+JSON.stringify(path)+'\'><label><input type="checkbox"><span class="' + fileType + '"></span>'
-          + '</label>' + path["fname"] + '</li>')
+        //  input.push('<li meth=\''+JSON.stringify(path)+'\'><label><input type="checkbox"><span class="' + fileType + '"></span>'
+        //  + '</label>' + path["fname"] + '</li>')
+
+          input.push('<div class="list-item-icon" meth=\''+JSON.stringify(path)+'\'><img src="css/images/'+fileType+'.png" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path["fname"] + '</p><p class="list-item-icon__subtext">' + path["lastModified"] + '</p><p class="list-item-icon__subtext">'+niceBytes(path["fz"])+'</p></div></div>')
+
         }
         
         document.querySelector("#item-list").innerHTML = input.join("")
@@ -383,6 +389,20 @@ setTimeout(()=>{
         
       };
       isBacking = false;
+    }
+
+    
+   
+    function niceBytes(x){
+    
+      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+      let l = 0, n = parseInt(x, 10) || 0;
+    
+      while(n >= 1024 && ++l){
+          n = n/1024;
+      }
+      
+      return(n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
     }
 
     load();
