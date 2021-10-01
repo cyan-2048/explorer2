@@ -21,10 +21,11 @@
 * - https://wiki.mozilla.org/WebAPI/DeviceStorageAPI
 */
 
-
+  ringtone = ['mp3','oog'];
   opsyon = false;
   isPicking = false;
   isSharing = false;
+  SaR = false;
   activityRequest = "";
   anim = 2;
 
@@ -40,7 +41,10 @@
       switch (e.key) {
         case "Backspace":
           anim = 0
-          lastIndex["/"+root] = document.activeElement.tabIndex
+          
+          if (document.activeElement.hasAttribute("meth")){
+            lastIndex["/"+root] = document.activeElement.tabIndex
+          }
           if (root !== ""){
             e.preventDefault();
             for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
@@ -70,7 +74,7 @@
             } else {
               selecta()
             }
-
+            lastIndex["/"+root] = document.activeElement.tabIndex
           }
 
            if (document.activeElement.className == "oops"){
@@ -83,7 +87,7 @@
                 break;
               case 2:
                 isSharing = true
-                importFiles(selsected["fname"])
+                importFiles(selsected)
                 break;
               case 3:
                 
@@ -92,7 +96,16 @@
                 
                 break;
               case 5:
-                
+                goAwayPls()
+                setTimeout(() => {
+                  anim = 2
+                  for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
+                    document.querySelectorAll(".lista li")[p].classList = "anim5";
+                  }
+                  setTimeout(()=>{
+                    load()
+                  },300)
+                }, 500);
                 break;
               case 6:
                 
@@ -103,9 +116,16 @@
               case 8:
                 
                 break;
+              case 9:
+                
+                break;
+              case 10:
+                SaR = true
+                importFiles(selsected)
+                break;
             }
           }
-          lastIndex["/"+root] = document.activeElement.tabIndex
+          
 
 
           break;
@@ -117,7 +137,9 @@
           setTimeout(()=>{
             load()
           },300)
+          if (document.activeElement.hasAttribute("meth")){
           lastIndex["/"+root] = document.activeElement.tabIndex
+        }
           break;
         case "SoftRight":
           if (document.activeElement.parentElement.id == "item-list"){
@@ -129,6 +151,11 @@
             document.getElementById("shr").className = ""
           } else {
             document.getElementById("shr").className = "oops"
+          }
+          if (ringtone.indexOf(selsected.ext) == -1){
+            document.getElementById("sar").className = ""
+          } else {
+            document.getElementById("sar").className = "oops"
           }
           document.getElementById("upsyun").style.display = "block";
           lazyNAV({fcsbl:'.oops',bv:"nearest",scrl:"auto"});
@@ -236,7 +263,7 @@
           document.getElementById("item-list").innerHTML = "";
           execute();
           lazyNAV({fcsbl:".lista li",bv:"center",scrl:"smooth"})
-          if (!lastIndex["/"+root]){
+          if (!lastIndex["/"+root] || lastIndex["/"+root] < 0){
             lastIndex["/"+root] = 0
           }
           document.querySelectorAll(".lista li")[lastIndex["/"+root]].focus()
@@ -254,7 +281,7 @@
 
           setTimeout(() => {
             for (let p = 0; p < document.querySelectorAll(".lista li").length; p++) {
-              document.querySelectorAll(".lista li")[p].classList = "anim"+anim;
+              document.querySelectorAll(".lista li")[p].className = "anim"+anim;
             }
           }, 50);
           
@@ -374,15 +401,24 @@ setTimeout(()=>{
           load();
         } else {
           console.log("File to share: " + target["fname"]);
-          importFiles(target["fname"]);
+          importFiles(target);
         }
         flagOk = false;
       }
     }
 
     const importFiles = (filesToImport)=> {
-
-      a_file = (root == "") ? storage.get(filesToImport) : a_file = storage.get(root + "/" + filesToImport);
+      
+      a_file = (root == "") ? storage.get(filesToImport.fname) : a_file = storage.get(root + "/" + filesToImport.fname);
+      subfind = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt") : subfind = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt")
+      subfind1 = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt") : subfind1 = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt")
+      sub = null;
+      subfind.onsuccess = ()=>{
+        sub = subfind.result
+      }
+      subfind1.onsuccess = ()=>{
+        sub = subfind.result
+      }
 
       a_file.onerror = function() {
         var afterNotification = function(){
@@ -423,6 +459,31 @@ setTimeout(()=>{
               // this is ugly; all share options with images are shown. But right now is the
               // only way to share with the email.
               type: 'image/*',
+              number: 1,
+              blobs: [item.blob],
+              filenames: [nameonly],
+              filepaths: [item.filename]
+            }
+          });
+
+          activity.onerror = function(e) {
+            console.warn('Share activity error:', activity.error.name);
+            load();
+          };
+
+          activity.onsuccess = function(e) {
+            load();
+          }
+        } else if (ringtone.indexOf(filesToImport.ext) != -1 && SaR == true){
+          SaR = false
+          var item = new Object();
+          item.filename = a_file.result.name;
+          item.blob = a_file.result;
+          var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
+          var activity = new MozActivity({
+            name: 'setringtone',
+            data: {
+              type: 'audio/*',
               number: 1,
               blobs: [item.blob],
               filenames: [nameonly],

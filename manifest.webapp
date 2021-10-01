@@ -11,6 +11,7 @@
 		"name": "FabianOvrWrt",
 		"url": "https://github.com/fabianovrwrt"
 	},
+	"origin": "app://prismarine.bananahackers.net",
 	"default_locale": "en",
 	"permissions": {
 		"spatialnavigation-app-manage":{},
@@ -27,6 +28,14 @@
 			"disposition": "inline",
 			"returnValue": true,
 			"href": "/index.html"
+		},
+		"pris@open": {
+			"filters": {
+				"type": ["video/*"]
+			},
+			"disposition": "inline",
+			"returnValue": true,
+			"href": "activities/video.html"
 		}
 	},
 	"locales": {
