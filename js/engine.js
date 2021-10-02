@@ -200,12 +200,13 @@
         opsyon = false;
         document.getElementById("upsyun").className = "anim6"
         lazyNAV({fcsbl:".lista div[meth]",bv:"center",scrl:"smooth"})
+        document.querySelector("footer").classList.remove("negro")
         setTimeout(() => {
-          document.querySelector("footer").classList.remove("negro")
+          
           document.getElementById("upsyun").style.display = "none"
           document.getElementById("upsyun").className = ""
           lastIndexu.focus()
-        }, 300);
+        }, 500);
       }
       
     }
@@ -253,7 +254,7 @@
 
       document.getElementById("item-list").innerHTML = ""
       loadinganim = setTimeout(()=>{
-        document.getElementById("item-list").innerHTML = '<div style="position: relative; top: calc(50vh / 2);" class="windows8"><div class="wBall" id="wBall_1"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_2"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_3"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_4"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_5"><div class="wInnerBall"></div></div></div><div style="width: 100%; text-align: center; position: relative; top: 90px;">Just a moment...</div>'
+        document.getElementById("item-list").innerHTML = '<ul class="lista" id="item-list"><div style="position: fixed; top: 31%; left: 39%; transform: scale(0.9);" class="windows8"><div class="wBall" id="wBall_1"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_2"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_3"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_4"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_5"><div class="wInnerBall"></div></div></div><div style="width: 100%; text-align: center; position: relative; top: 120px; font-size: 15px; font-weight: 400;">Just a moment...</div></ul>'
       },1000)
       var cursor = storage.enumerate(root);
 
@@ -296,9 +297,9 @@
         }
         var fname = file.name.replace(prefix, "");
         if(fname.split("/").length > 1) {
-          pathsToSort.push({"fname":fname , "lastModified": file.lastModifiedDate.toLocaleString()});
+          pathsToSort.push({"fname":fname , "lastModified": file.lastModifiedDate.toLocaleString("en-GB")});
         } else {
-          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "lastModified": file.lastModifiedDate.toLocaleString() });
+          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "lastModified": file.lastModifiedDate.toLocaleString("en-GB") });
         }
         cursor.continue();
       }
@@ -341,7 +342,7 @@
           //  input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
           //  + '</label>' + path[0] + '</li>')
 
-            input.push('<div class="list-item-icon" meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified+'</p></div></div>')
+            input.push('<div class="list-item-icon" meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified.split(",")[0].split("/").join("-")+'</p></div></div>')
 
           }
         }
@@ -355,7 +356,7 @@
         //  input.push('<li meth=\''+JSON.stringify(path)+'\'><label><input type="checkbox"><span class="' + fileType + '"></span>'
         //  + '</label>' + path["fname"] + '</li>')
 
-          input.push('<div class="list-item-icon" meth=\''+JSON.stringify(path)+'\'><img src="css/images/'+fileType+'.png" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path["fname"] + '</p><p class="list-item-icon__subtext">' + path["lastModified"] + '</p><p class="list-item-icon__subtext">'+niceBytes(path["fz"])+'</p></div></div>')
+          input.push('<div class="list-item-icon" meth=\''+JSON.stringify(path)+'\'><img src="css/images/'+fileType+'.png" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path["fname"] + '</p><p class="list-item-icon__subtext">' + path["lastModified"].split(",")[0].split("/").join("-") + '</p><p class="list-item-icon__subtext bwa">'+niceBytes(path["fz"])+'</p></div></div>')
 
         }
         
@@ -382,7 +383,6 @@ setTimeout(()=>{
           I'm starting to give up on animations at this point
 */
         
-        flagOk = true;
 
         
 
@@ -409,7 +409,7 @@ setTimeout(()=>{
 
     function selecta() {
       var target = JSON.parse(document.activeElement.getAttribute("meth"));
-      if(flagOk && target.fname != ""){
+      if(target.fname != ""){
         if(target.folder == true){
           if(!isBacking){
             if(root == ""){
@@ -423,22 +423,41 @@ setTimeout(()=>{
           console.log("File to share: " + target["fname"]);
           importFiles(target);
         }
-        flagOk = false;
       }
     }
 
     const importFiles = (filesToImport)=> {
+      var vidz = ['mp4','3gp']
       
-      a_file = (root == "") ? storage.get(filesToImport.fname) : a_file = storage.get(root + "/" + filesToImport.fname);
       subfind = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt") : subfind = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt")
       subfind1 = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt") : subfind1 = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt")
-      sub = null;
+      
+      sub0 = ""
+      sub1 = ""
+      
+      subfind.onerror = ()=>{
+        sub0 = ""
+        // sub = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
+        brokensubs()
+      }
+      subfind1.onerror = ()=>{
+        sub1 = ""
+        //  sub1 = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
+        brokensubs()
+      }
+
       subfind.onsuccess = ()=>{
-        sub = subfind.result
+        
+        sub0 = subfind.result
+        brokensubs()
       }
       subfind1.onsuccess = ()=>{
-        sub = subfind.result
+        
+        sub1 = subfind1.result
+        brokensubs()
       }
+
+      a_file = (root == "") ? storage.get(filesToImport.fname) : a_file = storage.get(root + "/" + filesToImport.fname);
 
       a_file.onerror = function() {
         var afterNotification = function(){
@@ -455,8 +474,14 @@ setTimeout(()=>{
         console.error("Error in: ", a_file.error.name);
       };
 
+      
+      
+
       a_file.onsuccess = function() {
-        flagOk = true
+
+
+      
+
         if(isPicking){
           isPicking = false;
           activityRequest.postResult.type = a_file.result.type;
@@ -494,7 +519,7 @@ setTimeout(()=>{
           activity.onsuccess = function(e) {
             load();
           }
-        } else if (ringtone.indexOf(filesToImport.ext) != -1 && SaR == true){
+        } else if (ringtone.indexOf(filesToImport.ext) != -1 && SaR){
           SaR = false
           var item = new Object();
           item.filename = a_file.result.name;
@@ -519,8 +544,38 @@ setTimeout(()=>{
           activity.onsuccess = function(e) {
             load();
           }
+        } else if (vidz.indexOf(filesToImport.ext) != -1){
+          brokensubs()
+          var item = new Object();
+          item.filename = a_file.result.name;
+          item.blob = a_file.result;
+          var type = a_file.result.type;
+          
+          var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
+          var activity = new MozActivity({
+            name: 'pris@open',
+            data: {
+              type: type,
+              number: 1,
+              blob: item.blob,
+              filenames: [nameonly],
+              filepaths: [item.filename],
+              sub: sub
+            }
+          });
+
         }
       };
+    }
+
+    function brokensubs(){
+      if (sub1 !== ""){
+        sub = sub1
+      } else if (sub0 !== ""){
+        sub = sub0
+      } else if (sub0 == "" || sub1 == "") {
+        sub = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
+      }
     }
 
     document.getElementById("deviceStoragesList").addEventListener("blur",()=>{

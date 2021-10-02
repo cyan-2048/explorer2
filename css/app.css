@@ -191,7 +191,7 @@ ul {
 }
 
 .anim6 {
-	animation: 0.3s ease outYouGo !important;
+	animation: 0.3s ease outYouGo forwards !important;
 }
 
 @keyframes outYouGo {
@@ -700,10 +700,18 @@ footer.negro {
   font-size: 14px;
   font-weight: 400;
   margin: 0;
+	margin-top: 5px;
 }
 
 
 .list-item-icon__icon {
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
+}
+
+.bwa {
+	position: absolute;
+right: 0px;
+transform: translateY(-22px);
+opacity: 0.7;
 }

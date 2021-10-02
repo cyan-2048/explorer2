@@ -31,7 +31,23 @@
 		},
 		"pris@open": {
 			"filters": {
-				"type": ["video/*"]
+				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
+			},
+			"disposition": "inline",
+			"returnValue": true,
+			"href": "activities/video.html"
+		},
+		"open": {
+			"filters": {
+				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
+			},
+			"disposition": "inline",
+			"returnValue": true,
+			"href": "activities/video.html"
+		},
+		"view": {
+			"filters": {
+				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
 			},
 			"disposition": "inline",
 			"returnValue": true,

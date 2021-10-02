@@ -106,7 +106,7 @@ if (document.querySelectorAll(navlzy.fcsbl).length !== 0 ){
               top: elY - window.innerHeight / 2,
               behavior: navlzy.scrl,
             });
-          }, 50);
+          }, 5);
         } else if (navlzy.jmp == true){
           fcsbl[0].scrollIntoView({block:"end",behavior:navlzy.scrl})
           var idkk = setInterval(() => {
@@ -208,7 +208,7 @@ if (document.querySelectorAll(navlzy.fcsbl).length !== 0 ){
               top: elY - window.innerHeight / 2,
               behavior: navlzy.scrl,
             });
-          }, 50);
+          }, 5);
         } else if (navlzy.jmp === true){
           fcsbl[fcsbl.length - 1].scrollIntoView({block:"start",behavior:navlzy.scrl})
           var idkk = setInterval(() => {
