@@ -2,7 +2,7 @@
 	"name": "a Prismarine Block",
 	"description": "Allows to select a file and share it with an app, bluetooth or email.",
 	"launch_path": "/index.html",
-	"theme_color":"#30D5C8",
+	"theme_color":"#3D57D6",
 	"icons": {
 		"112": "/css/images/logo_112.png"
 	},

@@ -67,6 +67,10 @@ window.addEventListener("keydown",(e)=>{
         if (video.volume != 0){
           video.volume = Number(video.volume - 0.1).toFixed(1)
         }
+        volchum()
+      }
+      if (screen.orientation.type.includes("portrait")){
+        video.currentTime = video.currentTime - 10
       }
       break;
     case "ArrowRight":
@@ -74,6 +78,10 @@ window.addEventListener("keydown",(e)=>{
         if (video.volume != 1){
           video.volume = Number(video.volume + 0.1).toFixed(1)
         }
+        volchum()
+      }
+      if (screen.orientation.type.includes("portrait")){
+        video.currentTime = video.currentTime + 10
       }
       break;
     case "ArrowUp":
@@ -81,6 +89,10 @@ window.addEventListener("keydown",(e)=>{
         if (video.volume != 1){
           video.volume = Number(video.volume + 0.1).toFixed(1)
         }
+        volchum()
+      }
+      if (screen.orientation.type.includes("landscape")){
+        video.currentTime = video.currentTime - 10
       }
       break;
     case "ArrowDown":
@@ -88,7 +100,37 @@ window.addEventListener("keydown",(e)=>{
         if (video.volume != 0){
           video.volume = Number(video.volume - 0.1).toFixed(1)
         }
+        volchum()
       }
+      if (screen.orientation.type.includes("landscape")){
+        video.currentTime = video.currentTime + 10
+      }
+      break;
+    case "#":
+      navigator.volumeManager.requestUp()
+      break;
+    case "*":
+      navigator.volumeManager.requestDown()
+      break;
+    case "5":
+      if (idk1 < 2){
+        idk1 = idk1 + 1
+      } else {
+        idk1 = 0
+      }
+      changeAspect()
+      break;
+    case "1":
+      if (ikdk0 != 0){
+        ikdk0 = ikdk0 - 1
+      }
+      changeRate()
+      break;
+    case "3":
+      if (ikdk0 < 7){
+        ikdk0 = ikdk0 + 1
+      }
+      changeRate()
       break;
     case "":
       
@@ -114,17 +156,41 @@ video.onpause = ()=>{
   document.getElementById("pause").style.display = "none"
 }
 
+var idk1 = 0;
 var volfed;
 
-video.addEventListener("volumechange",(e)=>{
+var idk = ["","crop1","fill"]
+var idkk = ["","crop2","fill"]
+var idkkk = ["Fit","Zoom","Fill"]
+var ikdk0 = 3;
+var ikdk = [0.25 , 0.5 , 0.75, 1 , 1.25 , 1.5 , 1.75 , 2]
 
-  var vol = e.target.volume
 
+function changeAspect(){
+  if (video.videoWidth > video.videoHeight){
+    video.className = idk[idk1]
+  } else {
+    video.className = idkk[idk1]
+  }
+}
+
+function changeRate(){
+  video.playbackRate = ikdk[ikdk0]
+}
+
+function volchum(){
   clearTimeout(volfed)
   document.getElementById("bolyum").style.opacity = "1"
   volfed = setTimeout(()=>{
     document.getElementById("bolyum").style.opacity = "0"
   },1500)
+}
+
+video.addEventListener("volumechange",(e)=>{
+
+  var vol = e.target.volume
+
+  
 
   document.getElementById("prog").style.height = vol * 100 + "%"
   document.getElementById("sth2").innerHTML = vol * 10

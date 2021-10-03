@@ -360,3 +360,15 @@ transition: height ease .2s;
   opacity: 0.95;
 }
 }
+
+.fill {
+  object-fit: fill !important;
+}
+
+.crop1 {
+  width: 133% !important;
+}
+
+.crop2 {
+  height: 133% !important;
+}
