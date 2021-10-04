@@ -1,0 +1,257 @@
+/* fira-sans-300 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* fira-sans-regular - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* fira-sans-500 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* fira-sans-600 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* fira-sans-700 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* fira-sans-900 - latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 900;
+  src: local(''),
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-900.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../../fonts/fira-sans-v11-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+* {
+  font-family: "Fira Sans";
+}
+
+body,html {
+  padding:0;
+  margin:0;
+  background: rgb(5,5,5);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+#albumart {
+  width: 100vw;height: 100vw;background: #6A6A6A;position: fixed;top: 0;
+}
+
+#musikanota{
+  height: 117px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: -20;
+}
+
+#actualart{
+  width: 100%;
+height: 100%;
+background-size: cover;
+}
+
+
+
+#backu {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  height: 70px;
+}
+
+#controls svg {
+	fill:white;
+  position: fixed;
+	width: 30px;
+	height: 30px;
+}
+
+#controls #arrow {
+  filter:invert(100%);
+  right: 0;
+  bottom: 0;
+}
+
+#menu {
+  bottom: 0px;
+left: 0px;
+}
+
+#controls {
+  position: fixed;
+  z-index: 210 !important;
+  width: 100%;
+  height: 80px;
+  box-sizing: border-box;
+  bottom: 0;
+  left: 0;
+  transition: opacity linear .3s;
+  opacity: 1;
+}
+
+#play, #pause {
+  bottom: 3px;
+  left: 50.5%;
+  transform: translate(-50%, 0);
+  width: 25px !important;
+  height: 25px !important;
+}
+
+#skipfor {
+  right: 72px;
+  bottom: 5px;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+#skipback {
+  left: 72px;
+  width: 20px !important;
+  height: 20px !important;
+  bottom: 5px;
+}
+
+#menu, #arrow {
+  width:30px !important;
+  height: 30px !important;
+}
+
+#orasan {
+  position: absolute;
+color: #117777;
+top: 4px;
+left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 4px;
+  padding-right: 4px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 3px;
+  font-weight: 500;
+}
+
+#current-duration {
+	font-size: 12px;
+	display: inline-block
+}
+
+#total-duration {
+	
+	display: inline-block;
+	font-size: 12px;
+}
+
+#progress {
+  background: #117777;
+  position: absolute;
+  top: -4px;
+  left: 0;
+  height: 4px;
+}
+
+
+
+#orasan * , #bolyum{
+	text-shadow: 1px 1px 5px rgba(0, 0, 0, .7);
+}
+
+#controls svg {
+	filter: drop-shadow( 1px 1px 5px rgba(0, 0, 0, .7));
+}
+
+#bolyum {
+  position: fixed;
+width: 100%;
+height: 100%;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+  z-index: 211 !important;
+  transition: opacity linear .2s;
+  opacity: 0;
+}
+
+#prog {
+  position: absolute;
+bottom: 0;
+background: #117777;
+width: 100%;
+height: 0%;
+transition: height ease .2s;
+  opacity: 0.95;
+}
+
+
+#titulo {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 5px;
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  box-sizing: border-box;
+  letter-spacing: -0.6px;
+}
+#progreso {
+  background: rgba(0,0,0,0.5);
+  position: absolute;
+  top: -4px;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0,0.7);
+}
+#artista {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 33px;
+  color: grey;
+  text-align: center;
+  font-size: 13px;
+  box-sizing: border-box;
+  letter-spacing: -0.6px;
+}
+#artista, #titulo {
+  width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

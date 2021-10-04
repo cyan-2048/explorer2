@@ -29,29 +29,29 @@
 			"returnValue": true,
 			"href": "/index.html"
 		},
-		"pris@open": {
+		"pris@video": {
 			"filters": {
 				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
 			},
 			"disposition": "inline",
 			"returnValue": true,
 			"href": "activities/video.html"
+		},
+		"pris@audio": {
+			"filters": {
+				"type": ["audio/*","audio/mpeg","audio/ogg","audio/mp4","audio/flac"]
+			},
+			"disposition": "inline",
+			"returnValue": true,
+			"href": "activities/music.html"
 		},
 		"open": {
 			"filters": {
-				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
+				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg", "audio/*","audio/mpeg","audio/ogg","audio/mp4","audio/flac"]
 			},
 			"disposition": "inline",
 			"returnValue": true,
-			"href": "activities/video.html"
-		},
-		"view": {
-			"filters": {
-				"type": ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
-			},
-			"disposition": "inline",
-			"returnValue": true,
-			"href": "activities/video.html"
+			"href": "activities/open.html"
 		}
 	},
 	"locales": {

@@ -337,14 +337,21 @@ navigator.mozSetMessageHandler('activity', function(activityReq) {
   console.log(activityReq)
   testlangfo = activityReq;
   var option = activityReq.source;
-  wops = ["pris@open","view","open"]
-  if (wops.indexOf(option.name) != -1 || option.name == "pris@open") {
+  wops = ["pris@video","view","open"]
+  if (wops.indexOf(option.name) != -1 || option.name == "pris@video") {
     if (activityReq.source.data.blob){
       video.querySelector("source").src = URL.createObjectURL(activityReq.source.data.blob);
       video.querySelector("source").type = activityReq.source.data.blob.type
       video.load()
       setTimeout(lud,1000)
       setTimeout(()=>{video.play()},800)
+      window.addEventListener('keydown',(e)=>{
+        if (e.key == "SoftRight"){
+          activityReq.postResult({
+            timeOfVideo: video.currentTime
+          })
+        }
+      })
     }
     if (activityReq.source.data.sub){
       var reader = new FileReader();

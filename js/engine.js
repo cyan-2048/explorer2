@@ -235,6 +235,10 @@
         }
     }
 
+    rootslow = false
+    cachedPaths = new Object();
+    cachedFiles = new Object();
+
     const load = ()=>{
       goAwayPls();
       foldersToSort = [];
@@ -254,13 +258,52 @@
 
       document.getElementById("item-list").innerHTML = ""
       loadinganim = setTimeout(()=>{
-        document.getElementById("item-list").innerHTML = '<ul class="lista" id="item-list"><div style="position: fixed; top: 31%; left: 39%; transform: scale(0.9);" class="windows8"><div class="wBall" id="wBall_1"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_2"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_3"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_4"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_5"><div class="wInnerBall"></div></div></div><div style="width: 100%; text-align: center; position: relative; top: 120px; font-size: 15px; font-weight: 400;">Just a moment...</div></ul>'
-      },1000)
+        document.getElementById("item-list").innerHTML = '<div style="position: fixed; top: 31%; left: 39%; transform: scale(0.9);" class="windows8"><div class="wBall" id="wBall_1"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_2"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_3"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_4"><div class="wInnerBall"></div></div><div class="wBall" id="wBall_5"><div class="wInnerBall"></div></div></div><div style="width: 100%; text-align: center; position: relative; top: 120px; font-size: 15px; font-weight: 400;">Just a moment...</div>'
+        rootslow = true
+      },2000)
       var cursor = storage.enumerate(root);
 
       cursor.onsuccess = function() {
+      if (cachedPaths["/"+root] && cachedFiles["/"+root]){
+        clearTimeout(loadinganim);
+        rootslow = false
+        pathsToSort = cachedPaths["/"+root]
+        filesToSort = cachedFiles["/"+root]
+        document.getElementById("item-list").innerHTML = "";
+          execute();
+          lazyNAV({fcsbl:".lista div[meth]",bv:"center",scrl:"smooth"})
+          if (!lastIndex["/"+root] || lastIndex["/"+root] < 0){
+            lastIndex["/"+root] = 0
+          }
+          document.querySelectorAll(".lista div[meth]")[lastIndex["/"+root]].focus()
+          setTimeout(()=>{
+            const rect = document.activeElement.getBoundingClientRect();
+            const elY =
+              rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+            
+            document.activeElement.parentNode.scrollBy({
+              left: 0,
+              top: elY - window.innerHeight / 2,
+              behavior: "auto",
+            });
+          }, 5)
+
+          setTimeout(() => {
+            for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+              document.querySelectorAll(".lista div[meth]")[p].classList.add("anim"+anim);
+            }
+          }, 50);
+          
+          
+          return;
+      } else {
         if (!cursor.result) {
           clearTimeout(loadinganim);
+          if (rootslow){
+            cachedPaths["/"+root] = pathsToSort
+            cachedFiles["/"+root] = filesToSort
+            rootslow = false
+          }
           document.getElementById("item-list").innerHTML = "";
           execute();
           lazyNAV({fcsbl:".lista div[meth]",bv:"center",scrl:"smooth"})
@@ -303,6 +346,7 @@
         }
         cursor.continue();
       }
+      }
 
       function execute() {
         var input = []
@@ -342,7 +386,7 @@
           //  input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
           //  + '</label>' + path[0] + '</li>')
 
-            input.push('<div class="list-item-icon" meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified.split(",")[0].split("/").join("-")+'</p></div></div>')
+            input.push('<div class="list-item-icon" meth=\''+JSON.stringify({"fname":path[0].replace(/'/g, "’"),"lastModified":foldersToSort[0][g].lastModified,"folder":true})+'\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified.split(",")[0].split("/").join("-")+'</p></div></div>')
 
           }
         }
@@ -408,7 +452,7 @@ setTimeout(()=>{
     load();
 
     function selecta() {
-      var target = JSON.parse(document.activeElement.getAttribute("meth"));
+      var target = JSON.parse(document.activeElement.getAttribute("meth").replace(/’/g, "'"));
       if(target.fname != ""){
         if(target.folder == true){
           if(!isBacking){
@@ -429,33 +473,36 @@ setTimeout(()=>{
     const importFiles = (filesToImport)=> {
       var vidz = ['mp4','3gp']
       
-      subfind = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt") : subfind = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt")
-      subfind1 = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt") : subfind1 = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt")
-      
-      sub0 = ""
-      sub1 = ""
-      
-      subfind.onerror = ()=>{
+      if (vidz.indexOf(filesToImport.ext) != -1){
+        subfind = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt") : subfind = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt")
+        subfind1 = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt") : subfind1 = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt")
+        
         sub0 = ""
-        // sub = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
-        brokensubs()
-      }
-      subfind1.onerror = ()=>{
         sub1 = ""
-        //  sub1 = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
-        brokensubs()
-      }
-
-      subfind.onsuccess = ()=>{
         
-        sub0 = subfind.result
-        brokensubs()
+        subfind.onerror = ()=>{
+          sub0 = ""
+          // sub = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
+          brokensubs()
+        }
+        subfind1.onerror = ()=>{
+          sub1 = ""
+          //  sub1 = new Blob(["WEBVTT\n\n1\n00:00:00 --> 00:00:01\n \n\n"], {type: "text/vtt"})
+          brokensubs()
+        }
+  
+        subfind.onsuccess = ()=>{
+          
+          sub0 = subfind.result
+          brokensubs()
+        }
+        subfind1.onsuccess = ()=>{
+          
+          sub1 = subfind1.result
+          brokensubs()
+        }
       }
-      subfind1.onsuccess = ()=>{
-        
-        sub1 = subfind1.result
-        brokensubs()
-      }
+      
 
       a_file = (root == "") ? storage.get(filesToImport.fname) : a_file = storage.get(root + "/" + filesToImport.fname);
 
@@ -553,7 +600,7 @@ setTimeout(()=>{
           
           var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
           var activity = new MozActivity({
-            name: 'pris@open',
+            name: 'open',
             data: {
               type: type,
               number: 1,
@@ -563,6 +610,14 @@ setTimeout(()=>{
               sub: sub
             }
           });
+
+          activity.onsuccess = (data) => {
+            console.log(activity.result)
+          }
+          activity.onerror = function(e) {
+            console.warn('Share activity error:', activity.error.name);
+            load();
+          };
 
         }
       };
