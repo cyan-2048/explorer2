@@ -13,37 +13,31 @@
   
   navigator.mozSetMessageHandler('activity', function(activityReq) {
     var type = activityReq.source.data.type
-    var activ;
+    var activity = new Object();
     window.addEventListener("keyup",(e)=>{
       if (e.key == "Backspace"){
         window.close()
       }
     })
     if (type.includes("audio/")) {
-          activ = new MozActivity({
-            name: 'pris@audio',
-            data: activityReq.source.data
-          });
-          activ.onsuccess = () => {
-          activityReq.postResult(activ.result)
-          }
-          activ.onerror = () => {
-          activityReq.postError(activ.error.name)
-          }
+      activity.name = 'pris@audio'
     } else if (type.includes("video/")) {
-          activ = new MozActivity({
-            name: 'pris@video',
-            data: activityReq.source.data
-          });
-          activ.onsuccess = () => {
-          activityReq.postResult(activ.result)
-          }
-          activ.onerror = () => {
-          activityReq.postError(activ.error.name)
-          }
+      activity.name = 'pris@video'
     } else {
       activityReq.postError("hmmm mime type isn't working")
     }
+    
+    activity.data = activityReq.source.data
+    
+    var activ = new MozActivity(activity)
+    activ.onsuccess = () => {
+      activityReq.postResult(activ.result)
+    }
+
+    activ.onerror = () => {
+      activityReq.postError(activ.error.name)
+    }
+
   });
 
 </script>

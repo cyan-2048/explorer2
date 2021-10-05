@@ -11,8 +11,9 @@ issues:
 added features: 
  - I tested my implementation of navigation i guess....
  - now the app remembers which folder/file was last focused in the current session.
- - now has mozActivity that can be used to play videos(detects if landscape or portrait) and also supports `.srt` and `.vtt` (special thanks to arma7x)
- - now has "Set as Ringtone" option in option menu when picking `.mp3` or `.oog` files...(im not too sure which file formats should be added)
+ - now has mozActivity that can be used to play videos(detects if landscape or portrait) and also supports `.srt` and `.vtt` (special thanks to arma7x), after user exits the video app it will create postResult of a Blob that has the time of the video where the user was last watching.
+ - now has "Set as Ringtone" option in option menu when picking `.mp3` or `.oog` files...(im not too sure which file formats should be added) 
+ - now has mozActivity that can be used to play Music.~~now i have an urge to make my own music app~~
 
 todo:
  - add better icons
@@ -22,4 +23,4 @@ todo:
 
 ~~I'll get rid of those jquery stuff next... (don't think it's necessary with such simple stuff that vanilla js can do...)~~
 
-lmao that was so easy i didn't even need to commit yet... like bruh wtf why would you need all of these libraries makes absolutely no sense to use stuff that you can simply do with vanilla js....
+lmao that was so easy i didn't even need to commit yet... like bruh wtf why would you need all of these libraries it makes absolutely no sense to use stuff that you can simply do with vanilla js....
