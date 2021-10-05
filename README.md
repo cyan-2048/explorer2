@@ -17,8 +17,10 @@ added features:
 
 todo:
  - add better icons
+ - maybe add thumbnails support too? maybe that's too hard ngl
  - ~~add softkeys~~ kinda done?
- - audio player with LRC support
+ - ~~audio player with~~ LRC support
+ - menu/options for music/video player
  - image viewer
 
 ~~I'll get rid of those jquery stuff next... (don't think it's necessary with such simple stuff that vanilla js can do...)~~
