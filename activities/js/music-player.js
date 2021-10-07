@@ -162,12 +162,16 @@ audio.onpause = ()=>{
 var audioBlob = null;
 
 function audioInit(){
+  document.body.requestFullscreen()
   if (audioBlob){
     audio.src = URL.createObjectURL(audioBlob);
     audio.load()
     setTimeout(() => {
       audio.currentTime = 0
     }, 100);
+    setTimeout(() => {
+      audio.play()
+    }, 150);
     
     jsmediatags.read(audioBlob, {
       onSuccess: function(tag) {
@@ -200,7 +204,7 @@ navigator.mozSetMessageHandler('activity', function(a) {
   console.log(req)
   if (req.source.data.blob){
     audioBlob = req.source.data.blob
-    audioInit()
+    setTimeout(audioInit,100)
   }
 
 })

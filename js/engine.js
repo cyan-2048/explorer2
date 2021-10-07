@@ -21,7 +21,7 @@
 * - https://wiki.mozilla.org/WebAPI/DeviceStorageAPI
 */
 
-  ringtone = ['mp3','oog'];
+  
   opsyon = false;
   isPicking = false;
   isSharing = false;
@@ -34,6 +34,7 @@
     folders = [];
     root = "";
     isBacking = false;
+    openWith = false;
     foldersAdded = [];
     lastIndex = new Object;
 
@@ -45,7 +46,7 @@
           if (document.activeElement.hasAttribute("meth")){
             lastIndex["/"+root] = document.activeElement.tabIndex
           }
-          if (root !== ""){
+          if (root !== "" && document.activeElement.className != "oops"){
             e.preventDefault();
             for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
               document.querySelectorAll(".lista div[meth]")[p].classList.add("anim4");
@@ -98,13 +99,7 @@
               case 5:
                 goAwayPls()
                 setTimeout(() => {
-                  anim = 2
-                  for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
-                    document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
-                  }
-                  setTimeout(()=>{
-                    load()
-                  },300)
+                  refresh()
                 }, 500);
                 break;
               case 6:
@@ -130,21 +125,16 @@
 
           break;
         case "SoftLeft":
-          anim = 2
-          for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
-            document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
-          }
-          setTimeout(()=>{
-            load()
-          },300)
           if (document.activeElement.hasAttribute("meth")){
-          lastIndex["/"+root] = document.activeElement.tabIndex
+            lastIndex["/"+root] = document.activeElement.tabIndex
+            refresh()
         }
           break;
         case "SoftRight":
-          if (document.activeElement.parentElement.id == "item-list"){
+          if (document.activeElement.hasAttribute("meth")){
           opsyon = true
           lastIndexu = document.activeElement;
+          lastIndex["/"+root] = document.activeElement.tabIndex
           document.querySelector("footer").classList.add("negro");
           selsected = JSON.parse(document.activeElement.getAttribute("meth"))
           if (selsected.folder == true){
@@ -194,6 +184,17 @@
         });
     }
    
+  
+    function refresh(){
+      anim = 2
+          for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
+            document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
+          }
+          setTimeout(()=>{
+            load()
+          },300)
+          
+    }
 
     function goAwayPls(){
       if (opsyon == true){
@@ -206,7 +207,7 @@
           document.getElementById("upsyun").style.display = "none"
           document.getElementById("upsyun").className = ""
           lastIndexu.focus()
-        }, 500);
+        }, 350);
       }
       
     }
@@ -342,7 +343,7 @@
         if(fname.split("/").length > 1) {
           pathsToSort.push({"fname":fname , "lastModified": file.lastModifiedDate.toLocaleString("en-GB")});
         } else {
-          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "lastModified": file.lastModifiedDate.toLocaleString("en-GB") });
+          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "type":file.type, "lastModified": file.lastModifiedDate.toLocaleString("en-GB") });
         }
         cursor.continue();
       }
@@ -470,10 +471,13 @@ setTimeout(()=>{
       }
     }
 
+    ringtone = ['mp3','oog'];
+
     const importFiles = (filesToImport)=> {
-      var vidz = ['mp4','3gp']
-      
-      if (vidz.indexOf(filesToImport.ext) != -1){
+      var vidz = ["video/webm", "video/mp4", "video/3gpp", "video/3gpp2", "video/ogg"]
+      var audz = ["audio/*","audio/mpeg","audio/ogg","audio/mp4","audio/flac"]
+      console.log(filesToImport)
+      if (vidz.indexOf(filesToImport.type) != -1){
         subfind = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt") : subfind = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".srt")
         subfind1 = (root == "") ? storage.get(filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt") : subfind1 = storage.get(root + "/" + filesToImport.fname.split("." + filesToImport.ext)[0] + ".vtt")
         
@@ -527,7 +531,7 @@ setTimeout(()=>{
       a_file.onsuccess = function() {
 
 
-      
+        activityObj = new Blob();
 
         if(isPicking){
           isPicking = false;
@@ -538,88 +542,92 @@ setTimeout(()=>{
           });
         } else if (isSharing) {
           isSharing = false;
-          blob = a_file.result;
-          item = new Object();
-          item.isVideo = true;
-          item.filename = blob.name;
-          item.blob = blob;
-          var type = blob.type;
-          var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
-          var activity = new MozActivity({
+          activityObj = {
             name: 'share',
             data: {
               // this is ugly; all share options with images are shown. But right now is the
               // only way to share with the email.
               type: 'image/*',
               number: 1,
-              blobs: [item.blob],
-              filenames: [nameonly],
-              filepaths: [item.filename]
+              blobs: [a_file.result],
+              filenames: [a_file.result.name.substring(a_file.result.name.lastIndexOf('/') + 1)],
+              filepaths: [a_file.result.name]
             }
-          });
-
-          activity.onerror = function(e) {
-            console.warn('Share activity error:', activity.error.name);
-            load();
-          };
-
-          activity.onsuccess = function(e) {
-            load();
           }
+
+//          activity.onerror = function(e) {
+//            console.warn('Share activity error:', activity.error.name);
+//            load();
+//          };
+//
+//          activity.onsuccess = function(e) {
+//            load();
+//          }
         } else if (ringtone.indexOf(filesToImport.ext) != -1 && SaR){
           SaR = false
-          var item = new Object();
-          item.filename = a_file.result.name;
-          item.blob = a_file.result;
-          var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
-          var activity = new MozActivity({
+          activityObj = {
             name: 'setringtone',
             data: {
               type: 'audio/*',
               number: 1,
-              blobs: [item.blob],
-              filenames: [nameonly],
-              filepaths: [item.filename]
+              blobs: [a_file.result],
+              filenames: [a_file.result.name.substring(a_file.result.name.lastIndexOf('/') + 1)],
+              filepaths: [a_file.result.name]
             }
-          });
-
-          activity.onerror = function(e) {
-            console.warn('Share activity error:', activity.error.name);
-            load();
           };
 
-          activity.onsuccess = function(e) {
-            load();
-          }
-        } else if (vidz.indexOf(filesToImport.ext) != -1){
+        } else if (vidz.indexOf(filesToImport.type) != -1){
           brokensubs()
-          var item = new Object();
-          item.filename = a_file.result.name;
-          item.blob = a_file.result;
-          var type = a_file.result.type;
           
-          var nameonly = item.filename.substring(item.filename.lastIndexOf('/') + 1);
-          var activity = new MozActivity({
-            name: 'open',
+          activityObj = {
             data: {
-              type: type,
+              type: a_file.result.type,
               number: 1,
-              blob: item.blob,
-              filenames: [nameonly],
-              filepaths: [item.filename],
+              blob: a_file.result,
+              filenames: [a_file.result.name.substring(a_file.result.name.lastIndexOf('/') + 1)],
+              filepaths: [a_file.result.name],
               sub: sub
             }
-          });
-
-          activity.onsuccess = (data) => {
-            console.log(activity.result)
-          }
-          activity.onerror = function(e) {
-            console.warn('Share activity error:', activity.error.name);
-            load();
           };
 
+          if (openWith){
+            activityObj.name = "open"
+          } else {
+            activityObj.name = "pris@video"
+          }
+
+        } else if (audz.indexOf(filesToImport.type) != -1){
+          
+          activityObj = {
+            data: {
+              type: a_file.result.type,
+              number: 1,
+              blob: a_file.result,
+              filename: a_file.result.name.substring(a_file.result.name.lastIndexOf('/') + 1),
+              filepath: a_file.result.name,
+              
+            }
+          };
+
+          if (openWith){
+            activityObj.name = "open"
+          } else {
+            activityObj.name = "pris@audio"
+          }
+
         }
+
+        if (activityObj.name && activityObj.data){
+          var activity = new MozActivity(activityObj)
+          activity.onsuccess = () => {
+            console.log(activity.result)
+          }
+          activity.onerror = () => {
+            console.log(activity)
+          }
+        }
+        
+
       };
     }
 

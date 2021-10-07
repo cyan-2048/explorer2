@@ -155,7 +155,7 @@ left: 0px;
 #orasan {
   position: absolute;
 color: #117777;
-top: 4px;
+top: 2px;
 left: 0;
   width: 100%;
   box-sizing: border-box;
@@ -167,16 +167,11 @@ left: 0;
   font-weight: 500;
 }
 
-#current-duration {
-	font-size: 12px;
+#current-duration, #total-duration {
+	font-size: 13px;
 	display: inline-block
 }
 
-#total-duration {
-	
-	display: inline-block;
-	font-size: 12px;
-}
 
 #progress {
   background: #117777;
@@ -254,4 +249,6 @@ transition: height ease .2s;
   width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 19px;
+  white-space: nowrap;
 }
