@@ -668,19 +668,21 @@ footer.negro {
 .list-item-icon {
   position: relative;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 5px;
   height: 60px;
-  display: flex;
-  align-items: center;
 	opacity: 0;
 }
 
 .list-item-icon__text-container {
-  margin-left: 10px;
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
+  right: 10px;
+  width: calc(100% - 75px);
+  top: 6.5px;
+  height: 45px;
 }
 
 .list-item-icon__text {
@@ -690,7 +692,7 @@ footer.negro {
   margin: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 180px;
+  width: 100%;
 }
 
 
@@ -705,8 +707,12 @@ footer.negro {
 
 
 .list-item-icon__icon {
-  height: 40px;
-  width: 40px;
+  height: 45px;
+  width: 45px;
+  position: absolute;
+  left: 10px;
+  top: 6.5px;
+	object-fit: cover;
 }
 
 .bwa {
@@ -714,4 +720,12 @@ footer.negro {
 right: 0px;
 transform: translateY(-22px);
 opacity: 0.7;
+}
+
+/* thumb*/
+
+.mp3thumb {
+	position: absolute;
+	bottom: 10px;
+	left: 38px;
 }

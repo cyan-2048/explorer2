@@ -21,11 +21,29 @@
 * - https://wiki.mozilla.org/WebAPI/DeviceStorageAPI
 */
 
-  
+  function localstosto(){
+    var x = window.localStorage
+    if (x.thumbs == null && x.paths == null && x.files == null){
+      x.thumbs = "{}"
+      x.paths = "{}"
+      x.files = "{}"
+    }
+  }
+  localstosto();
+
+  function localStor(){
+    var x = window.localStorage
+      x.thumbs = JSON.stringify(thumbs)
+      x.paths  = JSON.stringify(cachedPaths)
+      x.files  = JSON.stringify(cachedFiles)
+  }
+
   opsyon = false;
   isPicking = false;
   isSharing = false;
   SaR = false;
+  thumbs = JSON.parse(window.localStorage.thumbs);
+  
   activityRequest = "";
   anim = 2;
 
@@ -36,7 +54,7 @@
     isBacking = false;
     openWith = false;
     foldersAdded = [];
-    lastIndex = new Object;
+    lastIndex = new Object();
 
     window.addEventListener("keydown",(e)=>{
       switch (e.key) {
@@ -186,10 +204,14 @@
    
   
     function refresh(){
+      lastIndex = new Object()
       anim = 2
           for (let p = 0; p < document.querySelectorAll(".lista div[meth]").length; p++) {
             document.querySelectorAll(".lista div[meth]")[p].classList.add("anim5");
           }
+          cachedPaths = new Object()
+          cachedFiles = new Object()
+          thumbs = new Object()
           setTimeout(()=>{
             load()
           },300)
@@ -230,15 +252,17 @@
                 storage = storages[i];
                 // Go back to the root of the device storage, and load its content
                 root = "";
-                load();
+                refresh();
                 return;
             }
         }
     }
 
     rootslow = false
-    cachedPaths = new Object();
-    cachedFiles = new Object();
+    cachedPaths = JSON.parse(window.localStorage.paths);
+    cachedFiles = JSON.parse(window.localStorage.files);
+
+    thumbsProc = [];
 
     const load = ()=>{
       goAwayPls();
@@ -246,7 +270,7 @@
       filesToSort = [];
       pathsToSort = [];
       sizes = [];
-
+      
       alreadyAdded = [];
       
       if (root.replace(/\//g, ' > ').length > 25){
@@ -300,6 +324,10 @@
       } else {
         if (!cursor.result) {
           clearTimeout(loadinganim);
+          if (root == ""){
+            execThumbs()
+          }
+          
           if (rootslow){
             cachedPaths["/"+root] = pathsToSort
             cachedFiles["/"+root] = filesToSort
@@ -340,18 +368,24 @@
            prefix += root + "/";
         }
         var fname = file.name.replace(prefix, "");
+        if (file.type.includes("image")){
+          if (root == ""){
+            thumbsProc.push(file.name) 
+          }
+        }
         if(fname.split("/").length > 1) {
           pathsToSort.push({"fname":fname , "lastModified": file.lastModifiedDate.toLocaleString("en-GB")});
         } else {
-          filesToSort.push({"fname":fname , "fz":file.size, "ext": fname.split(".")[fname.split(".").length - 1], "type":file.type, "lastModified": file.lastModifiedDate.toLocaleString("en-GB") });
+          filesToSort.push({"fname":fname , "fz":file.size, "path":file.name, "ext": fname.split(".")[fname.split(".").length - 1], "type":file.type, "lastModified": file.lastModifiedDate.toLocaleString("en-GB") });
         }
         cursor.continue();
       }
       }
 
       function execute() {
+        localStor()
         var input = []
-        filesWithImage = ['doc', 'xls', 'ppt', 'psd', 'ai', 'pdf', 'html', 'xml', 'txt', 'mp3', 'jpg', 'png', 'zip', 'ogg'];
+        filesWithImage = ['doc', 'xls', 'ppt', 'psd', 'ai', 'pdf', 'html', 'xml', 'txt', 'mp3', 'jpg', "jpeg", 'png', 'zip', 'ogg'];
 
         pathsToSort.sort(
           function(a, b) {
@@ -387,21 +421,27 @@
           //  input.push('<li meth=\'{"fname":"'+path[0].toString()+'","lastModified":"'+foldersToSort[0][g].lastModified+'","folder":true}\'><label><input type="checkbox"><span class="folder"></span>'
           //  + '</label>' + path[0] + '</li>')
 
-            input.push('<div class="list-item-icon" meth=\''+JSON.stringify({"fname":path[0].replace(/'/g, "’"),"lastModified":foldersToSort[0][g].lastModified,"folder":true})+'\'><img src="css/images/folder.svg" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified.split(",")[0].split("/").join("-")+'</p></div></div>')
+            input.push('<div class="list-item-icon" meth=\''+JSON.stringify({"fname":path[0].replace(/'/g, "’"),"lastModified":foldersToSort[0][g].lastModified,"folder":true})+'\'><img src="css/images/folder.png" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path[0] + '</p><p class="list-item-icon__subtext">'+foldersToSort[0][g].lastModified.split(",")[0].split("/").join("-")+'</p></div></div>')
 
           }
         }
         for (var f = 0; f < filesToSort.length; f++) {
           path = filesToSort[f];
-          fileType = path["ext"];
-          if(filesWithImage.indexOf(fileType) == -1){
-            fileType = 'unk';
+          var fileType = "css/images/"+ path["ext"] +".png";
+          var cute = ""
+          if(filesWithImage.indexOf(path["ext"]) == -1){
+            fileType = "css/images/unk.png";
+          } else if (thumbs[path["path"]]){
+            fileType = thumbs[path["path"]]
+            
           }
-          
+          if (path["ext"] == "mp3"){
+            cute = '<img class="mp3thumb" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAk1BMVEUAAACdnZ2am5uXmJmWl5eTlJX4+fr6+/v29/j8/f2MjY6lpaWenp6FhoeBg4MZZqaampqQkZKJiovA1OQwk+KWl5fp7/SrxdrW1tZsncVakL1Xj701dasnbakiaaaioqKhoaGTlJTq7/Pq6urK2uigv9mLsM8mhM97psogesNNibsdb7JLgbAtdbAvb6YrbqYQYqZas8O8AAAABnRSTlMA7+/vMDARH5czAAAAkElEQVQY003JRRLDMBBEUYU0I7JMMVOY4f6niz2xqvR3/ZoxplQ/aK3DcLFmlBL/VLHcEPQCgI+pQ7EiGMS0n1xJGRFoMf3vnCP48GlyBOlBWzX7GUKCDuvEB+zwnEBMsBUcES2WmQPIrq21mCCYGcpHmlpEBzu4X9Jb5cPp9a2PEwQEEbgcSCnj2BgTBCP8AGnbCsfACqb2AAAAAElFTkSuQmCC" >'
+          }
         //  input.push('<li meth=\''+JSON.stringify(path)+'\'><label><input type="checkbox"><span class="' + fileType + '"></span>'
         //  + '</label>' + path["fname"] + '</li>')
 
-          input.push('<div class="list-item-icon" meth=\''+JSON.stringify(path)+'\'><img src="css/images/'+fileType+'.png" alt="" class="list-item-icon__icon"><div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path["fname"] + '</p><p class="list-item-icon__subtext">' + path["lastModified"].split(",")[0].split("/").join("-") + '</p><p class="list-item-icon__subtext bwa">'+niceBytes(path["fz"])+'</p></div></div>')
+          input.push('<div class="list-item-icon" meth=\''+JSON.stringify(path)+'\'><img src="'+fileType+'" alt="" class="list-item-icon__icon">'+cute+'<div class="list-item-icon__text-container"><p class="list-item-icon__text">' + path["fname"] + '</p><p class="list-item-icon__subtext">' + path["lastModified"].split(",")[0].split("/").join("-") + '</p><p class="list-item-icon__subtext bwa">'+niceBytes(path["fz"])+'</p></div></div>')
 
         }
         
@@ -644,6 +684,102 @@ setTimeout(()=>{
     document.getElementById("deviceStoragesList").addEventListener("blur",()=>{
       document.querySelector(".oops").focus()
     })
+
+    function resize(file){
+      return new Promise ((resolve,reject)=>{
+      const max_width = 80;
+      const max_height = 80;
+      
+      const input = storage.get(file);
+      input.onsuccess = function (ev) {
+        const blobURL = URL.createObjectURL(input.result);
+        const img = new Image();
+        img.src = blobURL;
+        img.onerror = function () {
+          URL.revokeObjectURL(this.src);
+          // Handle the failure properly
+          reject(new Error("Cannot load image"));
+        };
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+    
+          var width = img.width;
+          var height = img.height;
+        
+          // calculate the width and height, constraining the proportions
+          if (width > height) {
+            if (width > max_width) {
+              //height *= max_width / width;
+              height = Math.round(height *= max_width / width);
+              width = max_width;
+            }
+          } else {
+            if (height > max_height) {
+              //width *= max_height / height;
+              width = Math.round(width *= max_height / height);
+              height = max_height;
+            }
+          }
+          
+          // resize the canvas and draw the image data into it
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          
+          
+          resolve(canvas.toDataURL("image/jpeg",0.8)); // get the data from canvas as 70% JPG (can be also PNG, etc.)
+        
+        };
+        
+      };
+      
+      
+    })
+    }
+
+    function resizeMe(img) {
+  
+      
+    }
+
+    var cantdoasync = 0
+
+    function execThumbs(){
+        if(!thumbs[thumbsProc[cantdoasync]]){
+          resize(thumbsProc[cantdoasync]).then(d =>{
+            thumbs[thumbsProc[cantdoasync]] = d
+            next()
+          }).catch(err => {
+            console.log(err)
+            thumbs[thumbsProc[cantdoasync]] = "css/images/jpg.png"
+            next()
+          })
+        } else {
+          next()
+        }
+        
+        function next(){
+          setTimeout(() => {
+            if (cantdoasync !== thumbsProc.length - 1){
+              cantdoasync = cantdoasync + 1
+              execThumbs()
+            } else {
+              cantdoasync = 0
+            }
+            if (cantdoasync == 0){
+              console.log("done")
+            } else {
+              console.log(cantdoasync)
+            }
+          }, 200);
+          
+        }
+
+        
+
+    }
 
   navigator.mozSetMessageHandler('activity', function(activityReq) {
     activityRequest = activityReq;
